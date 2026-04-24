@@ -1,0 +1,6 @@
+{
+  "name": "Utility Hub PWA",
+  "description": "A mobile-optimized utility app featuring a persistent counter and stopwatch with lap tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
