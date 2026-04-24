@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # IMPORTANT: If your build folder is named 'build' instead of 'dist', change it here
-          path: './dist'
+          path: './next'
 
   deploy:
     needs: build_site
