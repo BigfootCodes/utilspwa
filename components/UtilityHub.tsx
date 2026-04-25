@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Timer, Hash, Table as TableIcon, Settings as SettingsIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Counter from './Counter';
 import Stopwatch from './Stopwatch';
 import Spreadsheet from './Spreadsheet';
+import Ledger from './Ledger';
+import CashDeposits from './CashDeposits';
 import Settings from './Settings';
+import { Calculator, Clock, Database, Banknote, Receipt, Settings as SettingsIcon } from 'lucide-react';
 
-type Tab = 'counter' | 'stopwatch' | 'sheet' | 'settings';
+type Tab = 'counter' | 'time' | 'data' | 'cash' | 'expenses' | 'settings';
 
 export default function UtilityHub() {
   const [activeTab, setActiveTab] = useState<Tab>('counter');
@@ -46,15 +48,7 @@ export default function UtilityHub() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full bg-black text-white overflow-hidden max-w-[480px] mx-auto relative md:rounded-[3rem] md:border-[8px] border-neutral-900 shadow-2xl">
-      <header className="px-6 pt-10 pb-4 shrink-0 flex items-center justify-between">
-        <h1 className="text-xs uppercase tracking-[0.2em] text-neutral-500 font-bold">Utility Duo</h1>
-        <div className="flex gap-1.5 opacity-40">
-          <div className="w-4 h-4 rounded-full bg-white/10" />
-          <div className="w-4 h-4 rounded-full bg-white/10" />
-        </div>
-      </header>
-
+    <div className="flex flex-col h-[100dvh] w-full bg-[#f9f9fc] text-[#1a1c1e] font-['Inter'] overflow-hidden relative">
       <main className="flex-1 overflow-hidden relative z-10 flex flex-col">
         <AnimatePresence mode="wait">
           {activeTab === 'counter' && (
@@ -64,33 +58,57 @@ export default function UtilityHub() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
               transition={{ duration: 0.2 }}
-              className="flex-1"
+              className="flex-1 h-full overflow-y-auto"
             >
               <Counter onAction={triggerHaptic} />
             </motion.div>
           )}
-          {activeTab === 'stopwatch' && (
+          {activeTab === 'time' && (
             <motion.div
-              key="stopwatch"
+              key="time"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
               transition={{ duration: 0.2 }}
-              className="flex-1"
+              className="flex-1 h-full overflow-y-auto"
             >
               <Stopwatch onAction={triggerHaptic} />
             </motion.div>
           )}
-          {activeTab === 'sheet' && (
+          {activeTab === 'data' && (
             <motion.div
-              key="sheet"
+              key="data"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
               transition={{ duration: 0.2 }}
-              className="flex-1"
+              className="flex-1 h-full overflow-y-auto"
             >
               <Spreadsheet onAction={triggerHaptic} />
+            </motion.div>
+          )}
+          {activeTab === 'cash' && (
+            <motion.div
+              key="cash"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1 h-full overflow-y-auto"
+            >
+              <CashDeposits onAction={triggerHaptic} />
+            </motion.div>
+          )}
+          {activeTab === 'expenses' && (
+            <motion.div
+              key="expenses"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1 h-full overflow-y-auto"
+            >
+              <Ledger onAction={triggerHaptic} />
             </motion.div>
           )}
           {activeTab === 'settings' && (
@@ -100,67 +118,53 @@ export default function UtilityHub() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
               transition={{ duration: 0.2 }}
-              className="flex-1"
+              className="flex-1 h-full overflow-y-auto"
             >
-              <Settings haptics={hapticsEnabled} setHaptics={setHapticsEnabled} />
+              <Settings haptics={hapticsEnabled} setHaptics={setHapticsEnabled} onAction={triggerHaptic} />
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Bottom Tab Bar */}
-      <footer className="h-24 bg-neutral-900/80 backdrop-blur-2xl border-t border-neutral-800/50 flex justify-around items-center px-4 z-20 shrink-0 pb-4">
+      {/* Floating Bottom Nav Bar - Rounded Rectangle, Icons Only */}
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] rounded-3xl bg-white/80 backdrop-blur-2xl border border-black/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.12)] flex justify-between items-center px-4 py-4 z-50">
         <button
           onClick={() => { setActiveTab('counter'); triggerHaptic(); }}
-          className={`flex flex-col items-center gap-1.5 transition-all ${
-            activeTab === 'counter' ? 'text-cyan-400' : 'text-neutral-500 opacity-60'
-          }`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'counter' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
-          <div className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeTab === 'counter' ? 'bg-cyan-500/10' : 'hover:bg-white/5'}`}>
-            <Hash size={20} />
-          </div>
-          <span className="text-[9px] font-bold uppercase tracking-wider">Count</span>
+          <Calculator size={24} strokeWidth={activeTab === 'counter' ? 2.5 : 2} />
         </button>
-
         <button
-          onClick={() => { setActiveTab('stopwatch'); triggerHaptic(); }}
-          className={`flex flex-col items-center gap-1.5 transition-all ${
-            activeTab === 'stopwatch' ? 'text-cyan-400' : 'text-neutral-500 opacity-60'
-          }`}
+          onClick={() => { setActiveTab('time'); triggerHaptic(); }}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'time' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
-          <div className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeTab === 'stopwatch' ? 'bg-cyan-500/10' : 'hover:bg-white/5'}`}>
-            <Timer size={20} />
-          </div>
-          <span className="text-[9px] font-bold uppercase tracking-wider">Time</span>
+          <Clock size={24} strokeWidth={activeTab === 'time' ? 2.5 : 2} />
         </button>
-
         <button
-          onClick={() => { setActiveTab('sheet'); triggerHaptic(); }}
-          className={`flex flex-col items-center gap-1.5 transition-all ${
-            activeTab === 'sheet' ? 'text-cyan-400' : 'text-neutral-500 opacity-60'
-          }`}
+          onClick={() => { setActiveTab('data'); triggerHaptic(); }}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'data' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
-          <div className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeTab === 'sheet' ? 'bg-cyan-500/10' : 'hover:bg-white/5'}`}>
-            <TableIcon size={20} />
-          </div>
-          <span className="text-[9px] font-bold uppercase tracking-wider">Data</span>
+          <Database size={24} strokeWidth={activeTab === 'data' ? 2.5 : 2} />
         </button>
-
+        <button
+          onClick={() => { setActiveTab('cash'); triggerHaptic(); }}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'cash' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+        >
+          <Banknote size={24} strokeWidth={activeTab === 'cash' ? 2.5 : 2} />
+        </button>
+        <button
+          onClick={() => { setActiveTab('expenses'); triggerHaptic(); }}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'expenses' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+        >
+          <Receipt size={24} strokeWidth={activeTab === 'expenses' ? 2.5 : 2} />
+        </button>
         <button
           onClick={() => { setActiveTab('settings'); triggerHaptic(); }}
-          className={`flex flex-col items-center gap-1.5 transition-all ${
-            activeTab === 'settings' ? 'text-cyan-400' : 'text-neutral-500 opacity-60'
-          }`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'settings' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
-          <div className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeTab === 'settings' ? 'bg-cyan-500/10' : 'hover:bg-white/5'}`}>
-            <SettingsIcon size={20} />
-          </div>
-          <span className="text-[9px] font-bold uppercase tracking-wider">App</span>
+          <SettingsIcon size={24} strokeWidth={activeTab === 'settings' ? 2.5 : 2} />
         </button>
-      </footer>
-
-      {/* Home Indicator */}
-      <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/10 rounded-full hidden md:block" />
+      </nav>
     </div>
   );
 }

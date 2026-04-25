@@ -1,190 +1,153 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Flag } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect } from 'react';
+import { RotateCcw, Play, Pause, Flag } from 'lucide-react';
 
 interface Lap {
-  id: number;
+  id: string;
   time: number;
-  formatted: string;
-  delta: string;
+  overallTime: number;
 }
 
-interface StopwatchProps {
-  onAction?: () => void;
-}
+export default function Stopwatch({ onAction }: { onAction?: () => void }) {
+  const [isRunning, setIsRunning] = useState(false);
+  const [time, setTime] = useState(0);
+  const [laps, setLaps] = useState<Lap[]>([]);
 
-export default function Stopwatch({ onAction }: StopwatchProps) {
-  const [time, setTime] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTime = localStorage.getItem('utility-hub-stopwatch-time');
-      return savedTime ? parseInt(savedTime, 10) : 0;
-    }
-    return 0;
-  });
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const [laps, setLaps] = useState<Lap[]>(() => {
-    if (typeof window !== 'undefined') {
-      const savedLaps = localStorage.getItem('utility-hub-stopwatch-laps');
-      return savedLaps ? JSON.parse(savedLaps) : [];
-    }
-    return [];
-  });
-  
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(0);
-
-  // Sync to localStorage
   useEffect(() => {
-    localStorage.setItem('utility-hub-stopwatch-time', time.toString());
-    localStorage.setItem('utility-hub-stopwatch-laps', JSON.stringify(laps));
-  }, [time, laps]);
-
-  const formatTimeParts = useCallback((ms: number) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    const centiseconds = Math.floor((ms % 1000) / 10);
-    
-    return {
-      main: `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:`,
-      ms: centiseconds.toString().padStart(2, '0')
-    };
-  }, []);
-
-  const formatTime = useCallback((ms: number) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    const centiseconds = Math.floor((ms % 1000) / 10);
-    
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${centiseconds.toString().padStart(2, '0')}`;
-  }, []);
-
-  const toggle = () => {
-    onAction?.();
-    if (!isActive) {
-      setIsActive(true);
-      startTimeRef.current = Date.now() - time;
-      timerRef.current = setInterval(() => {
-        setTime(Date.now() - startTimeRef.current);
+    let interval: NodeJS.Timeout;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 10);
       }, 10);
-    } else {
-      setIsActive(false);
-      if (timerRef.current) clearInterval(timerRef.current);
     }
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
+  const toggleTimer = () => {
+    onAction?.();
+    setIsRunning(!isRunning);
   };
 
-  const reset = () => {
+  const resetTimer = () => {
     onAction?.();
-    setIsActive(false);
-    if (timerRef.current) clearInterval(timerRef.current);
+    setIsRunning(false);
     setTime(0);
     setLaps([]);
   };
 
   const addLap = () => {
-    if (!isActive) return;
     onAction?.();
-    const lastLapTime = laps.length > 0 ? laps[0].time : 0;
-    const deltaMs = time - lastLapTime;
-    
-    const newLap: Lap = {
-      id: Date.now(),
-      time: time,
-      formatted: formatTime(time),
-      delta: `+${formatTime(deltaMs)}`
-    };
-    
-    setLaps((prev) => [newLap, ...prev]);
+    const currentLapTime = laps.length === 0 ? time : time - laps[laps.length - 1].overallTime;
+    setLaps([...laps, { id: crypto.randomUUID(), time: currentLapTime, overallTime: time }]);
   };
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+  const formatTime = (ms: number) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    const centiseconds = Math.floor((ms % 1000) / 10);
+    
+    return {
+      minStr: minutes.toString().padStart(2, '0'),
+      secStr: seconds.toString().padStart(2, '0'),
+      cSecStr: centiseconds.toString().padStart(2, '0')
     };
-  }, []);
+  };
 
-  const timeParts = formatTimeParts(time);
+  const { minStr, secStr, cSecStr } = formatTime(time);
+
+  // Find the fastest lap
+  const bestLapIndex = laps.length > 1 ? laps.reduce((bestIdx, curr, idx, arr) => curr.time < arr[bestIdx].time ? idx : bestIdx, 0) : -1;
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex flex-col items-center justify-center pt-10 pb-8 shrink-0">
-        <span className="text-[11px] uppercase tracking-widest text-cyan-400 font-semibold mb-2">
-          Stopwatch
-        </span>
-        <div className="text-7xl font-light text-white tracking-tighter tabular-nums drop-shadow-[0_0_20px_rgba(34,211,238,0.1)]">
-          {timeParts.main}<span className="text-3xl text-neutral-600">{timeParts.ms}</span>
+    <div className="flex flex-col min-h-full pt-12 px-6 max-w-md mx-auto w-full pb-32">
+      <div className="text-center mb-8">
+        <h2 className="text-[28px] font-bold text-[#1a1c1e]">Timer</h2>
+      </div>
+
+      <div className="flex flex-col items-center justify-center mb-12 relative">
+        <div className="w-64 h-64 rounded-full bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col items-center justify-center relative">
+          <div className="absolute inset-2 rounded-full border border-[#c1c8c8]/30" />
+          
+          <div className="text-[34px] font-bold text-[#1a1c1e] tracking-tighter tabular-nums flex items-baseline">
+            <span>{minStr}</span>
+            <span className="text-[#414848] mx-1">:</span>
+            <span>{secStr}</span>
+            <span className="text-[#414848] mx-1 text-2xl">.</span>
+            <span className="text-[#414848] text-[22px] font-semibold">{cSecStr}</span>
+          </div>
+          
+          <div className="mt-2 text-[12px] font-semibold uppercase tracking-widest text-[#4d6072] flex items-center gap-1">
+            <Flag size={14} /> Lap {laps.length + 1}
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 px-6 mb-8 shrink-0">
-        <button
-          id="stopwatch-toggle"
-          onClick={toggle}
-          className={`h-20 rounded-[2rem] font-bold transition-all active:scale-95 flex items-center justify-center text-[11px] tracking-[0.2em] border-2 ${
-            isActive 
-              ? 'bg-white/5 text-white border-white/20' 
-              : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]'
-          }`}
+      <div className="flex justify-between items-center mb-12 px-4">
+        <button 
+          onClick={resetTimer}
+          className="w-20 h-20 rounded-full bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] flex flex-col items-center justify-center text-[#414848] active:scale-95 transition-transform"
         >
-          {isActive ? 'PAUSE' : 'START'}
+          <RotateCcw size={24} className="mb-1" />
+          <span className="text-[12px] font-semibold uppercase tracking-wider">Reset</span>
         </button>
-
-        <button
-          id="stopwatch-lap"
+        
+        <button 
+          onClick={toggleTimer}
+          className="w-24 h-24 rounded-full bg-[#0d2c2e] text-white shadow-lg shadow-[#0d2c2e]/20 flex flex-col items-center justify-center active:scale-95 transition-transform border-4 border-[#f9f9fc]"
+        >
+          {isRunning ? (
+            <Pause size={32} className="mb-1 fill-white" />
+          ) : (
+            <Play size={32} className="mb-1 ml-1 fill-white" />
+          )}
+          <span className="text-[12px] font-semibold uppercase tracking-wider">{isRunning ? 'Pause' : 'Start'}</span>
+        </button>
+        
+        <button 
           onClick={addLap}
-          disabled={!isActive}
-          className={`h-20 rounded-[2rem] font-bold transition-all active:scale-95 flex items-center justify-center text-[11px] tracking-[0.2em] border-2 ${
-            !isActive 
-              ? 'bg-white/5 text-white/5 border-white/5 cursor-not-allowed' 
-              : 'bg-white/10 text-white border-white/20'
-          }`}
+          disabled={!isRunning}
+          className="w-20 h-20 rounded-full bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] flex flex-col items-center justify-center text-[#414848] active:scale-95 transition-transform disabled:opacity-50"
         >
-          LAP
-        </button>
-
-        <button
-          id="stopwatch-reset"
-          onClick={reset}
-          className="col-span-2 h-16 rounded-2xl bg-rose-500/10 text-rose-400 font-bold border border-rose-500/20 active:scale-95 transition-transform flex items-center justify-center text-[10px] tracking-[0.3em]"
-        >
-          RESET
+          <Flag size={24} className="mb-1" />
+          <span className="text-[12px] font-semibold uppercase tracking-wider">Lap</span>
         </button>
       </div>
 
-      <div className="flex-1 overflow-hidden flex flex-col px-6">
-        <div className="flex justify-between items-end mb-3 border-b border-neutral-800 pb-2">
-          <h3 className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Laps</h3>
-          <span className="text-[10px] text-neutral-600">Session History</span>
+      <div className="flex-1 min-h-0 flex flex-col bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] rounded-t-2xl overflow-hidden border-b-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+        <div className="grid grid-cols-3 px-6 py-4 border-b border-black/[0.05] bg-[#dadadc]/30">
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072]">Lap</div>
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] text-center">Lap Time</div>
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] text-right">Overall</div>
         </div>
         
-        <div className="flex-1 overflow-y-auto no-scrollbar py-2">
-          <AnimatePresence initial={false}>
-            {laps.map((lap, index) => (
-              <motion.div
-                key={lap.id}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="flex justify-between py-4 border-b border-neutral-900/50"
+        <div className="flex-1 overflow-y-auto px-6 py-2">
+          {[...laps].reverse().map((lap, reversedIdx) => {
+            const actualIdx = laps.length - 1 - reversedIdx;
+            const isBest = actualIdx === bestLapIndex;
+            const fLap = formatTime(lap.time);
+            const fOverall = formatTime(lap.overallTime);
+            
+            return (
+              <div 
+                key={lap.id} 
+                className={`grid grid-cols-3 py-3 border-b border-black/[0.03] text-[15px] items-center ${isBest ? 'bg-[#c9e8eb]/20 -mx-6 px-6 text-[#0d2c2e]' : 'text-[#414848]'}`}
               >
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest text-neutral-600">Lap {laps.length - index}</span>
-                  <span className="text-sm font-mono text-white mt-1">{lap.formatted}</span>
+                <div className="flex items-center gap-2">
+                  <span>{(actualIdx + 1).toString().padStart(2, '0')}</span>
+                  {isBest && <span className="text-[14px]">★</span>}
                 </div>
-                <div className="flex flex-col items-end justify-end">
-                  <span className="text-[10px] font-mono text-zinc-600">{lap.delta}</span>
+                <div className={`text-center tabular-nums ${isBest ? 'font-medium' : ''}`}>
+                  {fLap.minStr}:{fLap.secStr}.{fLap.cSecStr}
                 </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                <div className={`text-right tabular-nums ${isBest ? '' : 'font-medium text-[#1a1c1e]'}`}>
+                  {fOverall.minStr}:{fOverall.secStr}.{fOverall.cSecStr}
+                </div>
+              </div>
+            );
+          })}
           {laps.length === 0 && (
-            <div className="h-full flex items-center justify-center py-20 opacity-10 flex-col gap-4">
-              <div className="w-12 h-[1px] bg-white" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-center">
-                Awaiting Data
-              </span>
-            </div>
+            <div className="py-8 text-center text-[#8c8f8e] text-sm">No laps recorded.</div>
           )}
         </div>
       </div>

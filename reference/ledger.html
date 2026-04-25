@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ledger - Utility Duo</title>
+<script type="text/javascript" nonce="a94cb09055524e9683b42bc6fbf" src="//local.adguard.org?ts=1777045896940&amp;type=content-script&amp;dmn=contribution.usercontent.google.com&amp;url=https%3A%2F%2Fcontribution.usercontent.google.com%2Fdownload%3Fc%3DCgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzUwODhjOGM1MDQwYzQ2NWFhZTU0ODYzODYwNmFmYzc0EgsSBxCQg8mUoBwYAZIBJAoKcHJvamVjdF9pZBIWQhQxNDI0NTM2ODkyMTg3NjcwNTA0Nw%26filename%3D%26opi%3D89354086&amp;app=com.brave.Browser&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-push&amp;st-loc&amp;st-java&amp;st-dnt"></script><script type="text/javascript" nonce="a94cb09055524e9683b42bc6fbf" src="//local.adguard.org?ts=1777045896940&amp;name=AdGuard%20Extra&amp;type=user-script"></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e8e8ea",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "primary-fixed-dim": "#adccce",
+                        "on-tertiary-container": "#8c8f8e",
+                        "secondary": "#4d6072",
+                        "outline-variant": "#c1c8c8",
+                        "on-primary-container": "#769496",
+                        "inverse-surface": "#2f3133",
+                        "surface-tint": "#466365",
+                        "secondary-fixed-dim": "#b5c9dd",
+                        "surface-container-low": "#f3f3f6",
+                        "on-secondary-fixed": "#081d2c",
+                        "on-surface": "#1a1c1e",
+                        "inverse-on-surface": "#f0f0f3",
+                        "surface-variant": "#e2e2e5",
+                        "on-surface-variant": "#414848",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c4c7c6",
+                        "surface-dim": "#dadadc",
+                        "tertiary": "#101413",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#c9e8eb",
+                        "on-secondary-fixed-variant": "#364959",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#adccce",
+                        "surface-container": "#eeeef0",
+                        "primary-container": "#0d2c2e",
+                        "on-tertiary-fixed": "#191c1c",
+                        "background": "#f9f9fc",
+                        "on-primary-fixed": "#002022",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e5",
+                        "primary": "#001618",
+                        "tertiary-container": "#252828",
+                        "outline": "#717879",
+                        "on-secondary-container": "#526576",
+                        "surface-bright": "#f9f9fc",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#cee2f6",
+                        "on-primary-fixed-variant": "#2e4c4e",
+                        "on-tertiary-fixed-variant": "#444747",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#d1e5f9",
+                        "on-background": "#1a1c1e",
+                        "tertiary-fixed": "#e1e3e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xl": "48px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "stack-lg": "32px",
+                        "margin-page": "24px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "button": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "button": ["16px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["15px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "display": ["34px", {"lineHeight": "41px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["17px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #f9f9fc;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-black/[0.05] shadow-sm shadow-black/5 flex justify-between items-center w-full px-6 py-4 fixed top-0 sticky z-50">
+<div class="active:scale-95 duration-200 hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-emerald-950">grid_view</span>
+</div>
+<h1 class="text-lg font-bold tracking-tighter text-emerald-950 font-['Inter']">Utility Duo</h1>
+<div class="active:scale-95 duration-200 hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-emerald-950">account_circle</span>
+</div>
+</header>
+<main class="px-margin-page pb-stack-xl pt-stack-md max-w-2xl mx-auto">
+<!-- Page Title -->
+<div class="py-stack-lg text-center">
+<h2 class="font-h1 text-h1 text-on-surface">Ledger</h2>
+<p class="text-on-surface-variant font-body-md mt-1">Track and manage your daily expenses</p>
+</div>
+<!-- Primary Shadow Box (Card) -->
+<div class="glass-card rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
+<!-- New Expense Form -->
+<section class="p-6 border-b border-black/[0.05]">
+<div class="flex items-center gap-2 mb-stack-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<h3 class="font-h2 text-h2 text-primary">New Expense</h3>
+</div>
+<form class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-caps text-on-surface-variant px-1">Description</label>
+<input class="w-full bg-surface-container-low border-none rounded-DEFAULT px-4 py-3 focus:ring-2 focus:ring-secondary/20 transition-all placeholder:text-on-surface-variant/40" placeholder="e.g. Weekly Groceries" type="text"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-caps text-on-surface-variant px-1">Amount</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
+<input class="w-full bg-surface-container-low border-none rounded-DEFAULT pl-8 pr-4 py-3 focus:ring-2 focus:ring-secondary/20 transition-all placeholder:text-on-surface-variant/40" placeholder="0.00" type="number"/>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-caps text-on-surface-variant px-1">Category</label>
+<select class="w-full bg-surface-container-low border-none rounded-DEFAULT px-4 py-3 focus:ring-2 focus:ring-secondary/20 transition-all text-on-surface">
+<option>Groceries</option>
+<option>Utilities</option>
+<option>Entertainment</option>
+<option>Transport</option>
+<option>Other</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-caps text-on-surface-variant px-1">Date</label>
+<input class="w-full bg-surface-container-low border-none rounded-DEFAULT px-4 py-3 focus:ring-2 focus:ring-secondary/20 transition-all text-on-surface" type="date"/>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-button py-4 rounded-DEFAULT active:scale-95 transition-all mt-2 shadow-md shadow-primary/10" type="submit">
+                        Record Expense
+                    </button>
+</form>
+</section>
+<!-- History Table -->
+<section class="p-6">
+<div class="flex items-center justify-between mb-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">history</span>
+<h3 class="font-h2 text-h2 text-primary">History</h3>
+</div>
+<button class="text-secondary font-label-caps hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-black/[0.03]">
+<th class="pb-3 font-label-caps text-on-surface-variant">Date</th>
+<th class="pb-3 font-label-caps text-on-surface-variant">Detail</th>
+<th class="pb-3 font-label-caps text-on-surface-variant text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-black/[0.03]">
+<tr class="group">
+<td class="py-4 text-on-surface-variant text-sm">Oct 24</td>
+<td class="py-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Whole Foods Market</span>
+<span class="text-xs text-on-tertiary-container uppercase tracking-wider">Groceries</span>
+</div>
+</td>
+<td class="py-4 text-right font-semibold text-primary">-$142.50</td>
+</tr>
+<tr class="group">
+<td class="py-4 text-on-surface-variant text-sm">Oct 23</td>
+<td class="py-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Starbucks Coffee</span>
+<span class="text-xs text-on-tertiary-container uppercase tracking-wider">Entertainment</span>
+</div>
+</td>
+<td class="py-4 text-right font-semibold text-primary">-$6.75</td>
+</tr>
+<tr class="group">
+<td class="py-4 text-on-surface-variant text-sm">Oct 21</td>
+<td class="py-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Monthly Rent</span>
+<span class="text-xs text-on-tertiary-container uppercase tracking-wider">Utilities</span>
+</div>
+</td>
+<td class="py-4 text-right font-semibold text-primary">-$2,100.00</td>
+</tr>
+<tr class="group">
+<td class="py-4 text-on-surface-variant text-sm">Oct 20</td>
+<td class="py-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Shell Gas Station</span>
+<span class="text-xs text-on-tertiary-container uppercase tracking-wider">Transport</span>
+</div>
+</td>
+<td class="py-4 text-right font-semibold text-primary">-$58.20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Summary Stats Bento-ish -->
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div class="glass-card p-5 rounded-lg">
+<span class="font-label-caps text-on-tertiary-container block mb-1">Monthly Spent</span>
+<span class="font-display text-2xl text-primary">$4,821.45</span>
+<div class="mt-2 h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim w-3/4 rounded-full"></div>
+</div>
+</div>
+<div class="glass-card p-5 rounded-lg">
+<span class="font-label-caps text-on-tertiary-container block mb-1">Top Category</span>
+<span class="font-display text-2xl text-primary">Living</span>
+<span class="text-xs text-emerald-600 font-medium flex items-center mt-2">
+<span class="material-symbols-outlined text-sm mr-1">trending_down</span>
+                    12% less than Sept
+                </span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pt-3 pb-8 bg-white/70 backdrop-blur-xl border-t border-black/[0.05] shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50">
+<a class="flex flex-col items-center justify-center text-slate-400 opacity-60 hover:opacity-100 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">schedule</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase mt-1">Time</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 opacity-60 hover:opacity-100 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase mt-1">Data</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 opacity-60 hover:opacity-100 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase mt-1">Cash</span>
+</a>
+<a class="flex flex-col items-center justify-center text-emerald-950 scale-105 transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-['Inter'] text-[10px] font-bold tracking-wide uppercase mt-1">Expenses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 opacity-60 hover:opacity-100 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

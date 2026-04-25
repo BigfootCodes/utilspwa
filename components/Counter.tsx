@@ -1,108 +1,89 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Plus, Minus, RotateCcw } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState } from 'react';
+import { Minus, Plus, RefreshCcw } from 'lucide-react';
+import { motion } from 'motion/react';
 
-interface CounterProps {
-  onAction?: () => void;
-}
-
-export default function Counter({ onAction }: CounterProps) {
-  const [count, setCount] = useState<number>(() => {
+export default function Counter({ onAction }: { onAction?: () => void }) {
+  const [count, setCount] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('utility-hub-counter');
-      return saved !== null ? parseInt(saved, 10) : 0;
+      const saved = sessionStorage.getItem('counterValue');
+      return saved ? parseInt(saved, 10) : 0;
     }
     return 0;
   });
 
-  // Sync to localStorage
-  useEffect(() => {
-    localStorage.setItem('utility-hub-counter', count.toString());
-  }, [count]);
-
-  const increment = () => {
-    setCount((prev) => prev + 1);
+  const updateCount = (newCount: number) => {
     onAction?.();
-  };
-  
-  const decrement = () => {
-    if (count > 0) {
-      setCount((prev) => Math.max(0, prev - 1));
-      onAction?.();
+    setCount(newCount);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('counterValue', newCount.toString());
     }
   };
 
-  const reset = () => {
-    setCount(0);
+  const increment = () => updateCount(count + 1);
+  const decrement = () => {
     onAction?.();
+    if (count > 0) {
+      setCount(count - 1);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('counterValue', (count - 1).toString());
+      }
+    }
   };
+  const reset = () => updateCount(0);
 
   return (
-    <div className="flex flex-col items-center justify-around h-full py-12 px-6">
-      <div className="text-center">
-        <span className="block text-[11px] uppercase tracking-widest text-cyan-400 font-semibold mb-2">
-          Total Count
-        </span>
-        <div className="relative py-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={count}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.1 }}
-              transition={{ 
-                type: 'spring',
-                stiffness: 400,
-                damping: 25
-              }}
-              className="text-9xl font-light text-white tracking-tighter tabular-nums"
-            >
-              {count}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
+    <div className="flex flex-col min-h-full max-w-md mx-auto relative px-6 py-12">
+      <header className="flex items-center justify-center mb-12">
+        <h1 className="text-[28px] font-bold text-[#0d2c2e] text-center">Counter</h1>
+      </header>
 
-      <div className="flex flex-col gap-6 w-full max-w-[280px]">
-        <div className="grid grid-cols-2 gap-4">
-          <button
-            id="counter-decrement"
+      <section className="flex-1 flex flex-col items-center justify-center relative">
+        <div className="bg-[#e2e2e5]/30 backdrop-blur-3xl border border-[#c1c8c8]/30 rounded-[3rem] p-8 w-full aspect-square flex flex-col items-center justify-center shadow-[0_10px_40px_rgba(0,0,0,0.05)] relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none rounded-t-[3rem]" />
+          
+          <motion.div 
+            key={count}
+            initial={{ scale: 0.95, opacity: 0.8 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.1 }}
+            className="text-[120px] leading-[1] font-bold text-[#001618] tracking-tighter select-none tabular-nums z-10 transition-transform duration-300 transform group-active:scale-95"
+          >
+            {count.toLocaleString()}
+          </motion.div>
+          
+          <div className="text-[12px] font-semibold text-[#414848] uppercase tracking-widest mt-4 opacity-70">
+            Current Count
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-12 pb-32 flex flex-col gap-8 w-full items-center">
+        <div className="flex items-center justify-center gap-4 w-full max-w-[320px]">
+          <button 
             onClick={decrement}
-            disabled={count === 0}
-            className={`
-              h-20 flex items-center justify-center rounded-[2rem] border transition-all active:scale-95
-              ${count === 0 
-                ? 'bg-white/5 border-white/5 text-white/10 cursor-not-allowed' 
-                : 'bg-zinc-900 border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700'}
-            `}
+            className="w-20 h-20 rounded-full bg-[#eeeef0] border border-[#c1c8c8]/50 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-center text-[#001618] hover:bg-[#e2e2e5] active:scale-95 transition-all duration-200"
           >
-            <span className="text-4xl font-light">−</span>
+            <Minus size={32} />
           </button>
-
-          <button
-            id="counter-increment"
+          
+          <button 
             onClick={increment}
-            className="h-20 flex items-center justify-center rounded-[2rem] bg-white text-black transition-all hover:bg-neutral-200 active:scale-95"
+            className="w-24 h-24 rounded-full bg-[#0d2c2e] text-white shadow-[0_8px_30px_rgba(13,44,46,0.3)] flex items-center justify-center hover:opacity-90 active:scale-95 transition-all duration-200"
           >
-            <span className="text-4xl font-light">+</span>
+            <Plus size={40} />
           </button>
         </div>
 
-        <button
-          id="counter-reset"
+        <button 
           onClick={reset}
-          className="h-16 flex items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold tracking-[0.2em] transition-all active:scale-95"
+          className="flex items-center gap-2 px-6 py-3 rounded-full border border-[#717879]/30 text-[#414848] hover:bg-[#e2e2e5]/50 active:scale-95 transition-all duration-200 text-[16px] font-semibold"
         >
-          RESET
+          <RefreshCcw size={20} />
+          Reset Counter
         </button>
-      </div>
-
-      <div className="opacity-10 flex flex-col items-center gap-1">
-        <div className="w-12 h-[1px] bg-white" />
-        <span className="text-[7px] font-mono uppercase tracking-[0.3em]">Device.Primary-01</span>
-      </div>
+      </section>
     </div>
   );
 }
