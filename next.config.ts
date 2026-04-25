@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   output: 'export',
+  basePath: '/utilspwa',
+  assetPrefix: '/utilspwa',
   images: {
     unoptimized: true,
   },
