@@ -5,9 +5,7 @@ on:
     branches: [ "main" ] # Runs every time you push to main
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   build_site:
@@ -28,19 +26,9 @@ jobs:
       - name: Build
         run: npm run build # This creates the 'dist' folder
 
-      - name: Upload Artifacts
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # IMPORTANT: If your build folder is named 'build' instead of 'dist', change it here
-          path: './out'
-
-  deploy:
-    needs: build_site
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
