@@ -14,13 +14,26 @@ type Tab = 'counter' | 'time' | 'data' | 'cash' | 'expenses' | 'settings';
 
 export default function UtilityHub() {
   const [activeTab, setActiveTab] = useState<Tab>('counter');
-  const [hapticsEnabled, setHapticsEnabled] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('utility-hub-haptics');
-      return saved !== 'false';
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [hapticsEnabled, setHapticsEnabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('utility-hub-theme');
+    const savedHaptics = localStorage.getItem('utility-hub-haptics');
+    
+    const dark = savedTheme === 'dark';
+    setIsDarkMode(dark);
+    document.documentElement.classList.toggle('dark', dark);
+    
+    if (savedHaptics !== null) {
+      setHapticsEnabled(savedHaptics !== 'false');
     }
-    return true;
-  });
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('utility-hub-theme', isDarkMode ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', isDarkMode);
+  }, [isDarkMode]);
 
   useEffect(() => {
     localStorage.setItem('utility-hub-haptics', hapticsEnabled.toString());
@@ -51,7 +64,7 @@ export default function UtilityHub() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full bg-[#f9f9fc] text-[#1a1c1e] font-['Inter'] overflow-hidden relative">
+<div className="flex flex-col h-[100dvh] w-full bg-[#f9f9fc] dark:bg-[#101413] text-[#1a1c1e] dark:text-[#f0f0f3] font-['Inter'] overflow-hidden relative">
       <main className="flex-1 overflow-hidden relative z-10 flex flex-col">
         <AnimatePresence initial={false} mode="wait">
           {activeTab === 'counter' && (
@@ -123,47 +136,46 @@ export default function UtilityHub() {
               transition={{ duration: 0.2 }}
               className="flex-1 h-full overflow-y-auto"
             >
-              <Settings haptics={hapticsEnabled} setHaptics={setHapticsEnabled} onAction={triggerHaptic} />
+              <Settings haptics={hapticsEnabled} setHaptics={setHapticsEnabled} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onAction={triggerHaptic} />
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Floating Bottom Nav Bar - Rounded Rectangle, Icons Only */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] rounded-3xl bg-white/80 backdrop-blur-2xl border border-black/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.12)] flex justify-between items-center px-4 py-4 z-50">
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] rounded-3xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-3xl border border-white/20 dark:border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_white/20] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_white/5] flex justify-between items-center px-4 py-4 z-50">
         <button
           onClick={() => { setActiveTab('counter'); triggerHaptic(); }}
-          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'counter' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'counter' ? 'text-[#0d2c2e] dark:text-[#adccce] scale-110' : 'text-slate-400 dark:text-slate-500 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
           <Calculator size={24} strokeWidth={activeTab === 'counter' ? 2.5 : 2} />
         </button>
         <button
           onClick={() => { setActiveTab('time'); triggerHaptic(); }}
-          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'time' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'time' ? 'text-[#0d2c2e] dark:text-[#adccce] scale-110' : 'text-slate-400 dark:text-slate-500 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
           <Clock size={24} strokeWidth={activeTab === 'time' ? 2.5 : 2} />
         </button>
         <button
           onClick={() => { setActiveTab('data'); triggerHaptic(); }}
-          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'data' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'data' ? 'text-[#0d2c2e] dark:text-[#adccce] scale-110' : 'text-slate-400 dark:text-slate-500 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
           <Database size={24} strokeWidth={activeTab === 'data' ? 2.5 : 2} />
         </button>
         <button
           onClick={() => { setActiveTab('cash'); triggerHaptic(); }}
-          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'cash' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'cash' ? 'text-[#0d2c2e] dark:text-[#adccce] scale-110' : 'text-slate-400 dark:text-slate-500 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
           <Banknote size={24} strokeWidth={activeTab === 'cash' ? 2.5 : 2} />
         </button>
         <button
           onClick={() => { setActiveTab('expenses'); triggerHaptic(); }}
-          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'expenses' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'expenses' ? 'text-[#0d2c2e] dark:text-[#adccce] scale-110' : 'text-slate-400 dark:text-slate-500 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
           <Receipt size={24} strokeWidth={activeTab === 'expenses' ? 2.5 : 2} />
         </button>
         <button
           onClick={() => { setActiveTab('settings'); triggerHaptic(); }}
-          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'settings' ? 'text-[#0d2c2e] scale-110' : 'text-slate-400 opacity-70 hover:opacity-100 hover:scale-105'}`}
+          className={`flex items-center justify-center transition-all duration-200 active:scale-90 ${activeTab === 'settings' ? 'text-[#0d2c2e] dark:text-[#adccce] scale-110' : 'text-slate-400 dark:text-slate-500 opacity-70 hover:opacity-100 hover:scale-105'}`}
         >
           <SettingsIcon size={24} strokeWidth={activeTab === 'settings' ? 2.5 : 2} />
         </button>

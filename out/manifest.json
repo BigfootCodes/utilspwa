@@ -1,19 +1,19 @@
 {
-  "name": "Utility Hub",
-  "short_name": "UtilHub",
-  "description": "Multi-utility hub with counter and stopwatch.",
+  "name": "Utilities",
+  "short_name": "Utils",
+  "description": "Multi Utility App",
   "start_url": "/utilspwa/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "https://picsum.photos/id/237/192/192",
+      "src": "./images/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://picsum.photos/id/237/512/512",
+      "src": "./images/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

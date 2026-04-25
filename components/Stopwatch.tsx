@@ -61,23 +61,23 @@ export default function Stopwatch({ onAction }: { onAction?: () => void }) {
 
   return (
     <div className="flex flex-col min-h-full pt-12 px-6 max-w-md mx-auto w-full pb-32">
-      <div className="text-center mb-8">
-        <h2 className="text-[28px] font-bold text-[#1a1c1e]">Timer</h2>
+      <div className="mb-8">
+        <h2 className="text-[34px] font-bold tracking-tight text-[#001618] dark:text-[#f0f0f3]">Timer</h2>
       </div>
 
       <div className="flex flex-col items-center justify-center mb-12 relative">
-        <div className="w-64 h-64 rounded-full bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col items-center justify-center relative">
-          <div className="absolute inset-2 rounded-full border border-[#c1c8c8]/30" />
+        <div className="w-64 h-64 rounded-full bg-white/70 dark:bg-[#1a1c1e]/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] dark:border-[#444747] shadow-[0_8px_32px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center relative">
+          <div className="absolute inset-2 rounded-full border border-[#c1c8c8] dark:border-[#444747]/50" />
           
-          <div className="text-[34px] font-bold text-[#1a1c1e] tracking-tighter tabular-nums flex items-baseline">
+          <div className="text-[34px] font-bold text-[#1a1c1e] dark:text-[#f0f0f3] tracking-tighter tabular-nums flex items-baseline">
             <span>{minStr}</span>
-            <span className="text-[#414848] mx-1">:</span>
+            <span className="text-[#414848] dark:text-[#8c8f8e] mx-1">:</span>
             <span>{secStr}</span>
-            <span className="text-[#414848] mx-1 text-2xl">.</span>
-            <span className="text-[#414848] text-[22px] font-semibold">{cSecStr}</span>
+            <span className="text-[#414848] dark:text-[#8c8f8e] mx-1 text-2xl">.</span>
+            <span className="text-[#414848] dark:text-[#8c8f8e] text-[22px] font-semibold">{cSecStr}</span>
           </div>
           
-          <div className="mt-2 text-[12px] font-semibold uppercase tracking-widest text-[#4d6072] flex items-center gap-1">
+          <div className="mt-2 text-[12px] font-semibold uppercase tracking-widest text-[#4d6072] dark:text-[#8c9ba8] flex items-center gap-1">
             <Flag size={14} /> Lap {laps.length + 1}
           </div>
         </div>
@@ -86,7 +86,7 @@ export default function Stopwatch({ onAction }: { onAction?: () => void }) {
       <div className="flex justify-between items-center mb-12 px-4">
         <button 
           onClick={resetTimer}
-          className="w-20 h-20 rounded-full bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] flex flex-col items-center justify-center text-[#414848] active:scale-95 transition-transform"
+          className="w-20 h-20 rounded-full bg-white/70 dark:bg-[#1a1c1e]/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] dark:border-[#444747] flex flex-col items-center justify-center text-[#414848] dark:text-[#8c8f8e] active:scale-95 transition-transform"
         >
           <RotateCcw size={24} className="mb-1" />
           <span className="text-[12px] font-semibold uppercase tracking-wider">Reset</span>
@@ -94,7 +94,7 @@ export default function Stopwatch({ onAction }: { onAction?: () => void }) {
         
         <button 
           onClick={toggleTimer}
-          className="w-24 h-24 rounded-full bg-[#0d2c2e] text-white shadow-lg shadow-[#0d2c2e]/20 flex flex-col items-center justify-center active:scale-95 transition-transform border-4 border-[#f9f9fc]"
+          className="w-24 h-24 rounded-full bg-[#0d2c2e] text-white shadow-lg shadow-[#0d2c2e]/20 flex flex-col items-center justify-center active:scale-95 transition-transform border-4 border-[#f9f9fc] dark:border-[#101413]"
         >
           {isRunning ? (
             <Pause size={32} className="mb-1 fill-white" />
@@ -107,18 +107,18 @@ export default function Stopwatch({ onAction }: { onAction?: () => void }) {
         <button 
           onClick={addLap}
           disabled={!isRunning}
-          className="w-20 h-20 rounded-full bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] flex flex-col items-center justify-center text-[#414848] active:scale-95 transition-transform disabled:opacity-50"
+          className="w-20 h-20 rounded-full bg-white/70 dark:bg-[#1a1c1e]/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] dark:border-[#444747] flex flex-col items-center justify-center text-[#414848] dark:text-[#8c8f8e] active:scale-95 transition-transform disabled:opacity-50"
         >
           <Flag size={24} className="mb-1" />
           <span className="text-[12px] font-semibold uppercase tracking-wider">Lap</span>
         </button>
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col bg-white/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] rounded-t-2xl overflow-hidden border-b-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
-        <div className="grid grid-cols-3 px-6 py-4 border-b border-black/[0.05] bg-[#dadadc]/30">
-          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072]">Lap</div>
-          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] text-center">Lap Time</div>
-          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] text-right">Overall</div>
+      <div className="flex-1 min-h-0 flex flex-col bg-white/70 dark:bg-[#1a1c1e]/70 backdrop-blur-xl border-[0.5px] border-black/[0.05] dark:border-[#444747] rounded-t-2xl overflow-hidden border-b-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+        <div className="grid grid-cols-3 px-6 py-4 border-b border-black/[0.05] dark:border-[#444747] bg-[#dadadc]/30 dark:bg-[#252828]">
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] dark:text-[#8c9ba8]">Lap</div>
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] dark:text-[#8c9ba8] text-center">Lap Time</div>
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[#4d6072] dark:text-[#8c9ba8] text-right">Overall</div>
         </div>
         
         <div className="flex-1 overflow-y-auto px-6 py-2">
@@ -131,7 +131,7 @@ export default function Stopwatch({ onAction }: { onAction?: () => void }) {
             return (
               <div 
                 key={lap.id} 
-                className={`grid grid-cols-3 py-3 border-b border-black/[0.03] text-[15px] items-center ${isBest ? 'bg-[#c9e8eb]/20 -mx-6 px-6 text-[#0d2c2e]' : 'text-[#414848]'}`}
+                className={`grid grid-cols-3 py-3 border-b border-black/[0.03] dark:border-[#444747]/30 text-[15px] items-center ${isBest ? 'bg-[#c9e8eb]/20 dark:bg-[#0d2c2e]/30 -mx-6 px-6 text-[#0d2c2e] dark:text-[#adccce]' : 'text-[#414848] dark:text-[#c4c7c6]'}`}
               >
                 <div className="flex items-center gap-2">
                   <span>{(actualIdx + 1).toString().padStart(2, '0')}</span>
@@ -140,14 +140,14 @@ export default function Stopwatch({ onAction }: { onAction?: () => void }) {
                 <div className={`text-center tabular-nums ${isBest ? 'font-medium' : ''}`}>
                   {fLap.minStr}:{fLap.secStr}.{fLap.cSecStr}
                 </div>
-                <div className={`text-right tabular-nums ${isBest ? '' : 'font-medium text-[#1a1c1e]'}`}>
+                <div className={`text-right tabular-nums ${isBest ? '' : 'font-medium text-[#1a1c1e] dark:text-[#f0f0f3]'}`}>
                   {fOverall.minStr}:{fOverall.secStr}.{fOverall.cSecStr}
                 </div>
               </div>
             );
           })}
           {laps.length === 0 && (
-            <div className="py-8 text-center text-[#8c8f8e] text-sm">No laps recorded.</div>
+            <div className="py-8 text-center text-[#8c8f8e] dark:text-[#8c8f8e] text-sm">No laps recorded.</div>
           )}
         </div>
       </div>
