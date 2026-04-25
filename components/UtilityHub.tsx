@@ -17,6 +17,8 @@ export default function UtilityHub() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [hapticsEnabled, setHapticsEnabled] = useState<boolean>(true);
 
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('utility-hub-theme');
     const savedHaptics = localStorage.getItem('utility-hub-haptics');
@@ -28,16 +30,20 @@ export default function UtilityHub() {
     if (savedHaptics !== null) {
       setHapticsEnabled(savedHaptics !== 'false');
     }
+    
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
+    if (!isMounted) return;
     localStorage.setItem('utility-hub-theme', isDarkMode ? 'dark' : 'light');
     document.documentElement.classList.toggle('dark', isDarkMode);
-  }, [isDarkMode]);
+  }, [isDarkMode, isMounted]);
 
   useEffect(() => {
+    if (!isMounted) return;
     localStorage.setItem('utility-hub-haptics', hapticsEnabled.toString());
-  }, [hapticsEnabled]);
+  }, [hapticsEnabled, isMounted]);
 
   const triggerHaptic = useCallback(() => {
     if (hapticsEnabled && typeof navigator !== 'undefined' && navigator.vibrate) {
