@@ -2,7 +2,7 @@
   "name": "Utility Hub",
   "short_name": "UtilHub",
   "description": "Multi-utility hub with counter and stopwatch.",
-  "start_url": "/",
+  "start_url": "/utilspwa/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",

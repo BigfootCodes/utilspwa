@@ -35,7 +35,7 @@ export default function UtilityHub() {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(
+        navigator.serviceWorker.register('/utilspwa/sw.js').then(
           (registration) => {
             console.log('SW registered: ', registration);
           },

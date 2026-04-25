@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Utility Hub',
   description: 'Minimalist Counter & Stopwatch PWA',
-  manifest: '/manifest.json',
+  manifest: '/utilspwa/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
