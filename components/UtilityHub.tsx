@@ -34,7 +34,7 @@ export default function UtilityHub() {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+      const registerServiceWorker = () => {
         navigator.serviceWorker.register('/utilspwa/sw.js').then(
           (registration) => {
             console.log('SW registered: ', registration);
@@ -43,14 +43,17 @@ export default function UtilityHub() {
             console.log('SW registration failed: ', registrationError);
           }
         );
-      });
+      };
+
+      window.addEventListener('load', registerServiceWorker);
+      return () => window.removeEventListener('load', registerServiceWorker);
     }
   }, []);
 
   return (
     <div className="flex flex-col h-[100dvh] w-full bg-[#f9f9fc] text-[#1a1c1e] font-['Inter'] overflow-hidden relative">
       <main className="flex-1 overflow-hidden relative z-10 flex flex-col">
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false} mode="wait">
           {activeTab === 'counter' && (
             <motion.div
               key="counter"
