@@ -135,7 +135,7 @@ export default function Spreadsheet({ onAction }: { onAction?: () => void }) {
             <div className="flex-1 px-4 py-2 border-r border-black/[0.05] dark:border-[#444747]">Name</div>
             <div className="w-[140px] shrink-0 px-4 py-2">Tags</div>
           </div>
-          
+
           <div className="flex flex-col">
             {filteredTasks.map((task) => (
               <div
@@ -161,7 +161,7 @@ export default function Spreadsheet({ onAction }: { onAction?: () => void }) {
               </div>
             ))}
             {filteredTasks.length === 0 && (
-              <div className="p-8 text-center text-[#414848] dark:text-[#8c8f8e] text-sm border-b border-black/[0.05] dark:border-[#444747]">No operational streams available.</div>
+              <div className="p-8 text-center text-[#414848] dark:text-[#8c8f8e] text-sm border-b border-black/[0.05] dark:border-[#444747]">No entries.</div>
             )}
           </div>
         </div>

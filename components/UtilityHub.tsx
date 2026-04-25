@@ -17,39 +17,42 @@ export default function UtilityHub() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [hapticsEnabled, setHapticsEnabled] = useState<boolean>(true);
 
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('utility-hub-theme');
-    const savedHaptics = localStorage.getItem('utility-hub-haptics');
-    
-    const dark = savedTheme === 'dark';
-    setIsDarkMode(dark);
-    document.documentElement.classList.toggle('dark', dark);
-    
-    if (savedHaptics !== null) {
-      setHapticsEnabled(savedHaptics !== 'false');
-    }
-    
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isMounted) return;
-    localStorage.setItem('utility-hub-theme', isDarkMode ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', isDarkMode);
-  }, [isDarkMode, isMounted]);
-
-  useEffect(() => {
-    if (!isMounted) return;
-    localStorage.setItem('utility-hub-haptics', hapticsEnabled.toString());
-  }, [hapticsEnabled, isMounted]);
-
   const triggerHaptic = useCallback(() => {
     if (hapticsEnabled && typeof navigator !== 'undefined' && navigator.vibrate) {
       navigator.vibrate(10);
     }
   }, [hapticsEnabled]);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('utility-hub-theme');
+    const savedHaptics = localStorage.getItem('utility-hub-haptics');
+    const savedTab = localStorage.getItem('utility-hub-activeTab') as Tab | null;
+
+    const dark = savedTheme === 'dark';
+    setIsDarkMode(dark);
+    document.documentElement.classList.toggle('dark', dark);
+
+    if (savedHaptics !== null) {
+      setHapticsEnabled(savedHaptics !== 'false');
+    }
+
+    if (savedTab) {
+      setActiveTab(savedTab);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('utility-hub-theme', isDarkMode ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', isDarkMode);
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('utility-hub-haptics', hapticsEnabled.toString());
+  }, [hapticsEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('utility-hub-activeTab', activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
