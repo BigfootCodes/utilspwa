@@ -16,10 +16,24 @@ export const metadata: Metadata = {
   title: 'Utility Hub',
   description: 'Minimalist Counter & Stopwatch PWA',
   manifest: '/utilspwa/manifest.json',
+  icons: {
+    icon: '/utilspwa/images/favicon.svg',
+    apple: '/utilspwa/images/apple-touch-icon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Utility Hub',
+    startupImage: [
+      {
+        url: '/utilspwa/images/splash.png',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        url: '/utilspwa/images/darksplash.png',
+        media: '(prefers-color-scheme: dark)',
+      },
+    ],
   },
   formatDetection: {
     telephone: false,

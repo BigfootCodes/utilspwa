@@ -8,7 +8,7 @@ export interface Tag {
 export interface Task {
   id: string;
   task: string;
-  priority: Tag[];
+  tags: CustomTag[];
   details: string;
   isExpanded: boolean;
   order: number;
